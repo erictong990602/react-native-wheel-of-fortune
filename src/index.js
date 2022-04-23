@@ -292,9 +292,11 @@ class WheelOfFortune extends Component {
     return (
       <Animated.View
         style={{
+          zIndex: 1001,
+          position: 'absolute',
           width: knobSize,
           height: knobSize * 2,
-          justifyContent: 'flex-end',
+          top: -20,
           zIndex: 1,
           opacity: this.state.wheelOpacity,
           transform: [
@@ -346,7 +348,7 @@ class WheelOfFortune extends Component {
   render() {
     return (
       <View/*  style={styles.container} */>
-        <Animated.View style={[styles.content, { padding: 10 }]}>
+        <Animated.View style={[styles.content, { /* padding: 10 */ }]}>
           {this._renderSvgWheel()}
         </Animated.View>
         {this.props.options.playButton ? this._renderTopToPlay() : null}
@@ -359,17 +361,11 @@ export default WheelOfFortune;
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'green',
-    width: width,
-    height: height / 2,
   },
-  content: {},
+  content: {
+  },
   startText: {
     fontSize: 50,
     color: '#fff',
@@ -382,7 +378,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: width / 10,
     height: width / 10,
-    top: height / 3.9,
+    // marginTop: (20 * 100) / 57,
+    // left: -width / 50,
+    // top: height / 4,
     zIndex: 998,
     justifyContent: 'center',
     alignItems: 'center',
@@ -391,7 +389,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
   },
   'smallerFontStandard': {
-    top: height/500,
+    top: height / 500,
     'fontSize': 15,
     zIndex: 999,
   },
