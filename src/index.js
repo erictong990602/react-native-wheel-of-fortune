@@ -6,7 +6,7 @@ import {
   Animated,
   TouchableOpacity,
   Image,
-  Text as RNText,
+  Text as RNText
 } from 'react-native';
 import * as d3Shape from 'd3-shape';
 
@@ -14,9 +14,8 @@ import Svg, { G, Text, TSpan, Path, Pattern } from 'react-native-svg';
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
-let { width, height } = Dimensions.get('screen');
-width = width / 1.5;
-height = height / 1.5;
+const width = Dimensions.get('window').width / 1.25;
+const height = Dimensions.get('window').height / 2;
 class WheelOfFortune extends Component {
   constructor(props) {
     super(props);
@@ -27,8 +26,8 @@ class WheelOfFortune extends Component {
       winner: null,
       gameScreen: new Animated.Value(width - 40),
       wheelOpacity: new Animated.Value(1),
-      imageLeft: new Animated.Value(width / 2),
-      imageTop: new Animated.Value(height / 2),
+      // imageLeft: new Animated.Value(width / 2 - 30),
+      // imageTop: new Animated.Value(height / 2 - 70),
     };
     this.angle = 0;
 
@@ -38,7 +37,6 @@ class WheelOfFortune extends Component {
   prepareWheel = () => {
     this.Rewards = this.props.options.rewards;
     this.RewardCount = this.Rewards.length;
-
     this.numberOfSegments = this.RewardCount;
     this.fontSize = 20;
     this.oneTurn = 360;
@@ -47,10 +45,8 @@ class WheelOfFortune extends Component {
     this.winner = this.props.options.winner
       ? this.props.options.winner
       : Math.floor(Math.random() * this.numberOfSegments);
-
     this._wheelPaths = this.makeWheel();
     this._angle = new Animated.Value(0);
-
     this.props.options.onRef(this);
   };
 
@@ -62,8 +58,8 @@ class WheelOfFortune extends Component {
       winner: null,
       gameScreen: new Animated.Value(width - 40),
       wheelOpacity: new Animated.Value(1),
-      imageLeft: new Animated.Value(width / 2),
-      imageTop: new Animated.Value(height / 2),
+      imageLeft: new Animated.Value(width / 2 - 30),
+      imageTop: new Animated.Value(height / 2 - 70),
     });
   };
 
@@ -201,13 +197,6 @@ class WheelOfFortune extends Component {
   _renderSvgWheel = () => {
     return (
       <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => {
-            this._tryAgain();
-          }}
-          style={styles.roundButton1}>
-          <RNText style={[styles.smallerFontStandard, { color: 'white' }]}>GO</RNText>
-        </TouchableOpacity>
         {this._renderKnob()}
         <Animated.View
           style={{
@@ -292,11 +281,9 @@ class WheelOfFortune extends Component {
     return (
       <Animated.View
         style={{
-          zIndex: 1001,
-          position: 'absolute',
           width: knobSize,
           height: knobSize * 2,
-          top: -20,
+          justifyContent: 'flex-end',
           zIndex: 1,
           opacity: this.state.wheelOpacity,
           transform: [
@@ -335,23 +322,44 @@ class WheelOfFortune extends Component {
     );
   };
 
-  _renderTopToPlay() {
-    if (this.state.started == false) {
-      return (
-        <TouchableOpacity onPress={() => this._onPress()}>
-          {this.props.options.playButton()}
-        </TouchableOpacity>
-      );
-    }
-  }
+  // _renderTopToPlay() {
+  //   if (this.state.started == false) {
+  //     return (
+  //       <TouchableOpacity onPress={() => this._onPress()}>
+  //         {this.props.options.playButton()}
+  //       </TouchableOpacity>
+  //     );
+  //   }
+  // }
 
   render() {
     return (
-      <View/*  style={styles.container} */>
-        <Animated.View style={[styles.content, { /* padding: 10 */ }]}>
-          {this._renderSvgWheel()}
-        </Animated.View>
-        {this.props.options.playButton ? this._renderTopToPlay() : null}
+      <View style={styles.container}>
+        <View
+          style={{
+            position: 'absolute',
+            width: width,
+            height: height,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Animated.View style={[styles.content, { padding: 10 }]}>
+            {this._renderSvgWheel()}
+          </Animated.View>
+        </View>
+        <TouchableOpacity onPress={() => this._onPress()}>
+          <View style={{
+            top: height * 0.05,
+            width: width * 0.1,
+            height: width * 0.1,
+            backgroundColor: 'red',
+            borderRadius: width * 0.1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            <RNText style={{ color: 'white', fontSize: width * 0.05, zIndex: 999 }}>GO</RNText>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -361,11 +369,11 @@ export default WheelOfFortune;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  content: {
-  },
+  content: {},
   startText: {
     fontSize: 50,
     color: '#fff',
@@ -373,24 +381,5 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
-  },
-  roundButton1: {
-    position: 'absolute',
-    width: width / 10,
-    height: width / 10,
-    // marginTop: (20 * 100) / 57,
-    // left: -width / 50,
-    // top: height / 4,
-    zIndex: 998,
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    borderRadius: width / 10,
-    backgroundColor: 'red',
-  },
-  'smallerFontStandard': {
-    top: height / 500,
-    'fontSize': 15,
-    zIndex: 999,
   },
 });
